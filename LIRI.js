@@ -13,14 +13,13 @@ var keys = require("./keys.js")
 //node inputs
 var userCmd = process.argv[2];
 var userReq = "";
-
+var randomAction = [];
 
 //loop for searches with spaces
 for (var i = 3; i < process.argv.length; i++) {
     userReq = userReq + " " + process.argv[i]
 
 };
-
 
 
 //gets twitter tweets
@@ -31,17 +30,25 @@ var spotify = new Spotify(keys.spotify);
 
 
 //request function
+
+
 request(userCmd, function (error, response, body) {
     switch (userCmd) {
         //twitter function
         case "my-tweets":
             console.log("Searching tweets...")
             client.get("statuses/user_timeline", function (error, tweets, response) {
-                console.log(tweets)
+                for (i = 0; i < tweets.length; i ++){
+                    console.log("Tweet: " + tweets[i].text + 
+                    "\n" + 
+                    " Created At: " + tweets[i].created_at +
+                    + "\n" + "\n"
+                    + "--------------------");
+                };
             })
             break;
         case "spotify-this-song":
-        //spotify function
+            //spotify function
             console.log("Searching for song...\n")
             if (userReq === "") {
                 console.log("There's no search query!")
@@ -86,50 +93,46 @@ request(userCmd, function (error, response, body) {
 
                     var movie = JSON.parse(body);
 
-                        console.log("\n")
-                        console.log("Title: " + movie.Title);
-                        console.log("Release Year: " + movie.Year);
-                        console.log("IMDB Rating: " + movie.imdbRating);
-                        console.log("Rotten Tomatoes Rating: " + movie.Ratings[1].Value);
-                        console.log("Country: " + movie.Country);
-                        console.log("Language: " + movie.Language);
-                        console.log("Plot: " + movie.Plot);
-                        console.log("Actors: " + movie.Actors + "\n");
-                    })
+                    console.log("\n")
+                    console.log("Title: " + movie.Title);
+                    console.log("Release Year: " + movie.Year);
+                    console.log("IMDB Rating: " + movie.imdbRating);
+                    console.log("Rotten Tomatoes Rating: " + movie.Ratings[1].Value);
+                    console.log("Country: " + movie.Country);
+                    console.log("Language: " + movie.Language);
+                    console.log("Plot: " + movie.Plot);
+                    console.log("Actors: " + movie.Actors + "\n");
+                })
+            }
+            break;
+            case "do-what-it-says":
+            fs.readFile("do-something.txt", "utf8", function (error, data) {
+
+
+                // console error message
+                if (error) {
+                    return console.log(error);
                 }
-    break;
-        case "do-what-it-says":
-    fs.readFile("do-something.txt", "utf8", function (error, data) {
-
-
-        // console error message
-        if (error) {
-            return console.log(error);
-        }
-
-        // Then split it by commas (to make it more readable)
-        var randomAction = data.split(",");
-
-        // We will then re-display the content as an array for later use.
-
-        userCmd = randomAction[0];
-        console.log(userCmd)
-// this(userCmd, function (error, response, body)
-
-    });
-
-    break;
+        
+                // Then split it by commas (to make it more readable)
+                randomAction = data.split(",");
+        
+                // We will then re-display the content as an array for later use.
+        
+                userCmd = randomAction[Math.floor(Math.random() * 3)];
+                console.log(userCmd)
+            });
+            break;
         default:
-    console.log("I'm sorry, that command is invalid.");
-    console.log("The following commands are supported:");
-    console.log("- my-tweets");
-    console.log("- spotify-this-song 'search query'");
-    console.log("- movie-this 'search query'");
-    console.log("- do-what-it-says");
-}
+            console.log("I'm sorry, that command is invalid.");
+            console.log("The following commands are supported:");
+            console.log("- my-tweets");
+            console.log("- spotify-this-song 'search query'");
+            console.log("- movie-this 'search query'");
+            console.log("- do-what-it-says *Functionality not supported yet");
+    }
 
 })
-
 
 //gets OMDB movie info
 // var omdb = new MovieData();
