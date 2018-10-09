@@ -16,9 +16,9 @@ var userReq = "";
 
 
 //loop for searches with spaces
-for (var i = 3; i < process.argv.length; i++) {  
+for (var i = 3; i < process.argv.length; i++) {
     userReq = userReq + " " + process.argv[i]
-    
+
 };
 
 
@@ -39,17 +39,55 @@ request(userCmd, function (error, response, body) {
             })
             break;
         case "spotify-this-song":
-            console.log("Searching for song...")
-            spotify.search({ type: 'track', query: userReq})
-                .then(function (response) {
-                    var results = JSON.stringify(response).pretty()
-                    console.log(results)
-                })
-                .catch(function (err) {
-                    console.log(err);
-                });
+            console.log("Searching for song...\n")
+            if (userReq === "") {
+                console.log("There's no search query!")
+            } else {
+                spotify.search({ type: 'track', query: userReq })
+                    .then(function (response) {
+                        for (i = 0; i < response.tracks.items.length; i++) {
+                            //response data
+                            var songResult = response.tracks.items[i]
+                            //object created with search results
+                            var songData = {
+                                artist: songResult.artists[0].name,
+                                songName: songResult.name,
+                                preview: songResult.preview_url,
+                                album: songResult.album.name
+                            };
+                            // var results = JSON.stringify(response, null, 4)
+                            var resultNumber = i+1
+                            
+                            console.log("Result " + resultNumber + ":");
+                            console.log("Artist: " + songData.artist);
+                            console.log("Song Name: " + songData.songName);
+                            console.log("Preview link: " + songData.preview);
+                            console.log("Album: " + songData.album);
+                            console.log("\n ------------------------ \n")
+                        }
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                    });
+            }
             break;
-
+        case "movie-this":
+            if (userReq === "") {
+                console.log("There's no search query!")
+            } else {
+                console.log("movie request:" + userReq)
+            }
+            break;
+        case "do-what-it-says":
+            console.log("DO IT NOW")
+            break;
+        default:
+            console.log("I'm sorry, that command is invalid.");
+            console.log("The following commands are supported:");
+            console.log("- my-tweets");
+            console.log("- spotify-this-song 'search query'");
+            console.log("- movie-this 'search query'");
+            console.log("- do-what-it-says");
     }
 
 })
