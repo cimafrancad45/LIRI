@@ -29,9 +29,11 @@ var client = new Twitter(keys.twitter);
 //gets spotify music info
 var spotify = new Spotify(keys.spotify);
 
+
 //request function
 request(userCmd, function (error, response, body) {
     switch (userCmd) {
+        //twitter function
         case "my-tweets":
             console.log("Searching tweets...")
             client.get("statuses/user_timeline", function (error, tweets, response) {
@@ -39,6 +41,7 @@ request(userCmd, function (error, response, body) {
             })
             break;
         case "spotify-this-song":
+        //spotify function
             console.log("Searching for song...\n")
             if (userReq === "") {
                 console.log("There's no search query!")
@@ -56,8 +59,8 @@ request(userCmd, function (error, response, body) {
                                 album: songResult.album.name
                             };
                             // var results = JSON.stringify(response, null, 4)
-                            var resultNumber = i+1
-                            
+                            var resultNumber = i + 1
+
                             console.log("Result " + resultNumber + ":");
                             console.log("Artist: " + songData.artist);
                             console.log("Song Name: " + songData.songName);
@@ -75,20 +78,55 @@ request(userCmd, function (error, response, body) {
             if (userReq === "") {
                 console.log("There's no search query!")
             } else {
-                console.log("movie request:" + userReq)
-            }
-            break;
+                console.log("Searching for movie...")
+
+                var omdbSearch = "http://www.omdbapi.com/?t=" + userReq + "&y=&plot=short&apikey=40e9cece";
+
+                request(omdbSearch, function (error, response, body) {
+
+                    var movie = JSON.parse(body);
+
+                        console.log("\n")
+                        console.log("Title: " + movie.Title);
+                        console.log("Release Year: " + movie.Year);
+                        console.log("IMDB Rating: " + movie.imdbRating);
+                        console.log("Rotten Tomatoes Rating: " + movie.Ratings[1].Value);
+                        console.log("Country: " + movie.Country);
+                        console.log("Language: " + movie.Language);
+                        console.log("Plot: " + movie.Plot);
+                        console.log("Actors: " + movie.Actors + "\n");
+                    })
+                }
+    break;
         case "do-what-it-says":
-            console.log("DO IT NOW")
-            break;
+    fs.readFile("do-something.txt", "utf8", function (error, data) {
+
+
+        // console error message
+        if (error) {
+            return console.log(error);
+        }
+
+        // Then split it by commas (to make it more readable)
+        var randomAction = data.split(",");
+
+        // We will then re-display the content as an array for later use.
+
+        userCmd = randomAction[0];
+        console.log(userCmd)
+// this(userCmd, function (error, response, body)
+
+    });
+
+    break;
         default:
-            console.log("I'm sorry, that command is invalid.");
-            console.log("The following commands are supported:");
-            console.log("- my-tweets");
-            console.log("- spotify-this-song 'search query'");
-            console.log("- movie-this 'search query'");
-            console.log("- do-what-it-says");
-    }
+    console.log("I'm sorry, that command is invalid.");
+    console.log("The following commands are supported:");
+    console.log("- my-tweets");
+    console.log("- spotify-this-song 'search query'");
+    console.log("- movie-this 'search query'");
+    console.log("- do-what-it-says");
+}
 
 })
 
