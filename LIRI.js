@@ -131,7 +131,7 @@ request(userCmd, function (error, response, body) {
 
                 var doTheThing = randomAction[Math.floor(Math.random() * 3)];
                 console.log(doTheThing);
-                
+
                 switch (doTheThing) {
                     case "tweeter":
                         tweetGet();
@@ -153,11 +153,9 @@ request(userCmd, function (error, response, body) {
             console.log("- my-tweets");
             console.log("- spotify-this-song 'search query'");
             console.log("- movie-this 'search query'");
-            console.log("- do-what-it-says *Functionality not supported yet");
+            console.log("- do-what-it-says");
     }
 
 })
 
-//gets OMDB movie info
-// var omdb = new MovieData();
 
