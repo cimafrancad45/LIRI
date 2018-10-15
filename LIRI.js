@@ -46,60 +46,59 @@ function tweetGet() {
 function spotifyGet() {
     console.log("Searching for song...\n")
     if (userReq === "") {
-        console.log("There's no search query!")
-    } else {
-        spotify.search({ type: 'track', query: userReq })
-            .then(function (response) {
-                for (i = 0; i < response.tracks.items.length; i++) {
-                    //response data
-                    var songResult = response.tracks.items[i]
-                    //object created with search results
-                    var songData = {
-                        artist: songResult.artists[0].name,
-                        songName: songResult.name,
-                        preview: songResult.preview_url,
-                        album: songResult.album.name
-                    };
-                    // var results = JSON.stringify(response, null, 4)
-                    var resultNumber = i + 1
-
-                    console.log("Result " + resultNumber + ":");
-                    console.log("Artist: " + songData.artist);
-                    console.log("Song Name: " + songData.songName);
-                    console.log("Preview link: " + songData.preview);
-                    console.log("Album: " + songData.album);
-                    console.log("\n ------------------------ \n")
-                };
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
+        userReq = "Tell Your World"
     };
+    spotify.search({ type: 'track', query: userReq })
+        .then(function (response) {
+            for (i = 0; i < response.tracks.items.length; i++) {
+                //response data
+                var songResult = response.tracks.items[i]
+                //object created with search results
+                var songData = {
+                    artist: songResult.artists[0].name,
+                    songName: songResult.name,
+                    preview: songResult.preview_url,
+                    album: songResult.album.name
+                };
+                // var results = JSON.stringify(response, null, 4)
+                var resultNumber = i + 1
+
+                console.log("Result " + resultNumber + ":");
+                console.log("Artist: " + songData.artist);
+                console.log("Song Name: " + songData.songName);
+                console.log("Preview link: " + songData.preview);
+                console.log("Album: " + songData.album);
+                console.log("\n ------------------------ \n")
+            };
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
 };
+
 //movie function
 function movieGet() {
     if (userReq === "") {
-        console.log("There's no search query!")
-    } else {
-        console.log("Searching for movie...")
+        userReq = "Swiss Army Man"
+    }
+    console.log("Searching for movie...")
 
-        var omdbSearch = "http://www.omdbapi.com/?t=" + userReq + "&y=&plot=short&apikey=40e9cece";
+    var omdbSearch = "http://www.omdbapi.com/?t=" + userReq + "&y=&plot=short&apikey=40e9cece";
 
-        request(omdbSearch, function (error, response, body) {
+    request(omdbSearch, function (error, response, body) {
 
-            var movie = JSON.parse(body);
+        var movie = JSON.parse(body);
 
-            console.log("\n")
-            console.log("Title: " + movie.Title);
-            console.log("Release Year: " + movie.Year);
-            console.log("IMDB Rating: " + movie.imdbRating);
-            console.log("Rotten Tomatoes Rating: " + movie.Ratings[1].Value);
-            console.log("Country: " + movie.Country);
-            console.log("Language: " + movie.Language);
-            console.log("Plot: " + movie.Plot);
-            console.log("Actors: " + movie.Actors + "\n");
-        });
-    };
+        console.log("\n")
+        console.log("Title: " + movie.Title);
+        console.log("Release Year: " + movie.Year);
+        console.log("IMDB Rating: " + movie.imdbRating);
+        console.log("Rotten Tomatoes Rating: " + movie.Ratings[1].Value);
+        console.log("Country: " + movie.Country);
+        console.log("Language: " + movie.Language);
+        console.log("Plot: " + movie.Plot);
+        console.log("Actors: " + movie.Actors + "\n");
+    });
 };
 
 request(userCmd, function (error, response, body) {
@@ -137,11 +136,9 @@ request(userCmd, function (error, response, body) {
                         tweetGet();
                         break;
                     case "spootify":
-                        userReq = "Tell Your World"
                         spotifyGet();
                         break;
                     case "moovie":
-                        userReq = "Swiss Army Man"
                         movieGet();
                         break;
                 }
